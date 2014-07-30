@@ -17,6 +17,8 @@
 
   $.fn.panZoom = function(method) {
 
+    POSITION_UPDATE = 'panZoom:position-update';
+
     if ( methods[method] ) {
       return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'object' || ! method ) {
@@ -102,6 +104,7 @@
       validatePosition.apply(this);
       writePosition.apply(this);
       applyPosition.apply(this);
+      this.trigger(POSITION_UPDATE, this.data('panZoom').position);
     },
 
     'fit': function () {
