@@ -372,7 +372,8 @@
     }
 
     if (settings.aspect) {
-      target = data.target_dimensions.ratio;
+      var image = this[0];  // the image element
+      target = data.target_dimensions.ratio || (image.naturalWidth / image.naturalHeight);
       current = getCurrentAspectRatio.apply(this);
       if (current > target) {
         new_width = getHeight.apply(this) * target;
