@@ -17,6 +17,7 @@
 
   $.fn.panZoom = function(method) {
 
+	  
     if ( methods[method] ) {
       return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'object' || ! method ) {
@@ -26,6 +27,8 @@
     }
 
   };
+  
+  
 
   $.fn.panZoom.defaults = {
     zoomIn            : false,
@@ -59,7 +62,8 @@
   };
 
   var settings = {}
-
+  var properties = {};
+  
   var methods = {
     'init': function (options) {
       $.extend(settings, $.fn.panZoom.defaults, options);
@@ -106,6 +110,7 @@
 
     'fit': function () {
       var data = this.data('panZoom');
+      data.viewport_dimensions = { x: this.parent().width(), y: this.parent().height() };
       data.position.x1 = 0;
       data.position.y1 = 0;
       data.position.x2 = data.viewport_dimensions.x;
@@ -213,7 +218,7 @@
 
   function setupBindings() {
 
-    eventData = { target: this }
+    var eventData = { target: this };
     var data = this.data('panZoom');
 
     // bind up controls
@@ -369,15 +374,15 @@
     }
 
     if (settings.aspect) {
-      target = data.target_dimensions.ratio;
-      current = getCurrentAspectRatio.apply(this)
+      var target = data.target_dimensions.ratio;
+      var current = getCurrentAspectRatio.apply(this)
       if (current > target) {
-        new_width = getHeight.apply(this) * target;
-        diff = getWidth.apply(this) - new_width;
+        var new_width = getHeight.apply(this) * target;
+        var diff = getWidth.apply(this) - new_width;
         data.position.x1 = data.position.x1*1 + (diff/2);
         data.position.x2 = data.position.x2*1 - (diff/2);
       } else if (current < target) {
-        new_height = getWidth.apply(this) / target;
+        var new_height = getWidth.apply(this) / target;
         diff = getHeight.apply(this) - new_height;
         data.position.y1 = data.position.y1*1 + (diff/2);
         data.position.y2 = data.position.y2*1 - (diff/2);
@@ -390,10 +395,10 @@
   function applyPosition() {
     var data = this.data('panZoom');
 
-    width = getWidth.apply(this);
-    height = getHeight.apply(this);
-    left_offset = getLeftOffset.apply(this);
-    top_offset = getTopOffset.apply(this);
+    var width = getWidth.apply(this);
+    var height = getHeight.apply(this);
+    var left_offset = getLeftOffset.apply(this);
+    var top_offset = getTopOffset.apply(this);
 
     properties = {
       'top': Math.round(top_offset),
@@ -427,7 +432,7 @@
 
   function getWidth() {
     var data = this.data('panZoom');
-    width = (data.position.x2 - data.position.x1);
+    var width = (data.position.x2 - data.position.x1);
     return width;
   }
 
@@ -438,13 +443,13 @@
 
   function getHeight() {
     var data = this.data('panZoom');
-    height = (data.position.y2 - data.position.y1);
+    var height = (data.position.y2 - data.position.y1);
     return height;
   }
 
   function getTopOffset() {
     var data = this.data('panZoom');
-    top_offset = data.position.y1;
+    var top_offset = data.position.y1;
     return top_offset;
   }
 
@@ -462,7 +467,7 @@
 
   function getStepDimensions() {
     var data = this.data('panZoom');
-    ret = {
+    var ret = {
       zoom: {
         x: (settings.zoom_step/100 * data.viewport_dimensions.x),
         y: (settings.zoom_step/100 * data.viewport_dimensions.y)
