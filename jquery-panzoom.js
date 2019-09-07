@@ -17,7 +17,8 @@
 
   $.fn.panZoom = function(method) {
 
-	  
+    POSITION_UPDATE = 'panZoom:position-update';
+
     if ( methods[method] ) {
       return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'object' || ! method ) {
@@ -58,7 +59,7 @@
     mousewheel        : true,
     mousewheel_delta  : 1,
     draggable         : true,
-    clickandhold      : true 
+    clickandhold      : true
   };
 
   var settings = {}
@@ -95,10 +96,10 @@
 
     'readPosition': function () {
       var data = this.data('panZoom');
-      if (settings.out_x1) { data.position.x1 = settings.out_x1.val()*settings.factor }
-      if (settings.out_y1) { data.position.y1 = settings.out_y1.val()*settings.factor }
-      if (settings.out_x2) { data.position.x2 = settings.out_x2.val()*settings.factor }
-      if (settings.out_y2) { data.position.y2 = settings.out_y2.val()*settings.factor }
+      if (settings.out_x1) { data.position.x1 = settings.out_x1.val()*settings.factor; }
+      if (settings.out_y1) { data.position.y1 = settings.out_y1.val()*settings.factor; }
+      if (settings.out_x2) { data.position.x2 = settings.out_x2.val()*settings.factor; }
+      if (settings.out_y2) { data.position.y2 = settings.out_y2.val()*settings.factor; }
       methods.updatePosition.apply(this);
     },
 
@@ -106,6 +107,7 @@
       validatePosition.apply(this);
       writePosition.apply(this);
       applyPosition.apply(this);
+      this.trigger(POSITION_UPDATE, this.data('panZoom').position);
     },
 
     'fit': function () {
@@ -121,7 +123,7 @@
     'zoomIn': function (steps) {
       var data = this.data('panZoom');
       if (typeof(steps) == 'undefined') {
-        var steps = getStepDimensions.apply(this);
+        steps = getStepDimensions.apply(this);
       }
       data.position.x1 = data.position.x1*1 - steps.zoom.x;
       data.position.x2 = data.position.x2*1 + steps.zoom.x;
@@ -133,7 +135,7 @@
     'zoomOut': function (steps) {
       var data = this.data('panZoom');
       if (typeof(steps) == 'undefined') {
-        var steps = getStepDimensions.apply(this);
+        steps = getStepDimensions.apply(this);
       }
       data.position.x1 = data.position.x1*1 + steps.zoom.x;
       data.position.x2 = data.position.x2*1 - steps.zoom.x;
@@ -214,7 +216,7 @@
       window.clearInterval(data.mousedown_interval);
     }
 
-  }
+  };
 
   function setupBindings() {
 
@@ -222,87 +224,87 @@
     var data = this.data('panZoom');
 
     // bind up controls
-    if (settings.zoomIn) { 
-      settings.zoomIn.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'zoomIn'); 
+    if (settings.zoomIn) {
+      settings.zoomIn.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'zoomIn');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } );
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.zoomIn);
     }
 
-    if (settings.zoomOut) { 
-      settings.zoomOut.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'zoomOut'); 
+    if (settings.zoomOut) {
+      settings.zoomOut.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'zoomOut');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } );
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.zoomOut);
     }
 
-    if (settings.panUp) { 
-      settings.panUp.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panUp'); 
+    if (settings.panUp) {
+      settings.panUp.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panUp');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } ); 
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.panUp);
     }
 
-    if (settings.panDown) { 
-      settings.panDown.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panDown'); 
+    if (settings.panDown) {
+      settings.panDown.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panDown');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } );
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.panDown);
     }
 
-    if (settings.panLeft) { 
-      settings.panLeft.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panLeft'); 
+    if (settings.panLeft) {
+      settings.panLeft.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panLeft');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } ); 
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.panLeft);
     }
 
-    if (settings.panRight) { 
-      settings.panRight.bind('mousedown.panZoom', eventData, function(event) { 
-        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panRight'); 
+    if (settings.panRight) {
+      settings.panRight.bind('mousedown.panZoom', eventData, function(event) {
+        event.preventDefault(); event.data.target.panZoom('mouseDown', 'panRight');
       }).bind('mouseleave.panZoom mouseup.panZoom', eventData, function(event) {
         event.preventDefault(); event.data.target.panZoom('mouseUp');
-      }).bind('click.panZoom', function (event) { event.preventDefault() } );
+      }).bind('click.panZoom', function (event) { event.preventDefault(); } );
       data.bound_elements = data.bound_elements.add(settings.panRight);
     }
 
-    if (settings.fit) { 
-      settings.fit.bind('click.panZoom', eventData, function(event) { event.preventDefault(); event.data.target.panZoom('fit'); } ); 
+    if (settings.fit) {
+      settings.fit.bind('click.panZoom', eventData, function(event) { event.preventDefault(); event.data.target.panZoom('fit'); } );
       data.bound_elements = data.bound_elements.add(settings.fit);
     }
 
     if (settings.destroy) {
-      settings.destroy.bind('click.panZoom', eventData, function(event) { event.preventDefault(); event.data.target.panZoom('destroy'); } ); 
+      settings.destroy.bind('click.panZoom', eventData, function(event) { event.preventDefault(); event.data.target.panZoom('destroy'); } );
       data.bound_elements = data.bound_elements.add(settings.destroy);
     }
 
     // double click
     if (settings.double_click) {
-      this.bind('dblclick.panZoom', eventData, function(event) { event.data.target.panZoom('zoomIn') } );
+      this.bind('dblclick.panZoom', eventData, function(event) { event.data.target.panZoom('zoomIn'); } );
       // no need to record in bound elements array - gets done anyway when imageload is bound
     }
 
     // mousewheel
     if (settings.mousewheel && typeof(this.mousewheel) == 'function') {
-      this.parent().bind('mousewheel.panZoom', function(event, delta) { event.preventDefault(); $(this).find('img').panZoom('mouseWheel', delta) } );
+      this.parent().bind('mousewheel.panZoom', function(event, delta) { event.preventDefault(); $(this).find('img').panZoom('mouseWheel', delta); } );
       data.bound_elements = data.bound_elements.add(this.parent());
     } else if (settings.mousewheel) {
-      alert('Mousewheel requires jquery-mousewheel by Brandon Aaron (https://github.com/brandonaaron/jquery-mousewheel) - please include it or disable mousewheel to remove this warning.')
+      alert('Mousewheel requires jquery-mousewheel by Brandon Aaron (https://github.com/brandonaaron/jquery-mousewheel) - please include it or disable mousewheel to remove this warning.');
     }
 
     // direct form input
     if (settings.directedit) {
-      $(settings.out_x1).add(settings.out_y1).add(settings.out_x2).add(settings.out_y2).bind('change.panZoom blur.panZoom', eventData, function(event) { event.data.target.panZoom('readPosition') } );
+      $(settings.out_x1).add(settings.out_y1).add(settings.out_x2).add(settings.out_y2).bind('change.panZoom blur.panZoom', eventData, function(event) { event.data.target.panZoom('readPosition'); } );
       data.bound_elements = data.bound_elements.add($(settings.out_x1).add(settings.out_y1).add(settings.out_x2).add(settings.out_y2));
     }
 
@@ -311,11 +313,11 @@
         stop: function () { $(this).panZoom('dragComplete'); }
       });
     } else if (settings.draggable) {
-      alert('Draggable requires jQuery UI - please include jQuery UI or disable draggable to remove this warning.')
+      alert('Draggable requires jQuery UI - please include jQuery UI or disable draggable to remove this warning.');
     }
 
     // image load
-    $(this).bind('load.panZoom', eventData, function (event) { event.data.target.panZoom('loadImage') })
+    $(this).bind('load.panZoom', eventData, function (event) { event.data.target.panZoom('loadImage'); });
     data.bound_elements = data.bound_elements.add(this);
 
   }
@@ -374,8 +376,9 @@
     }
 
     if (settings.aspect) {
-      var target = data.target_dimensions.ratio;
-      var current = getCurrentAspectRatio.apply(this)
+      var image = this[0];  // the image element
+      var target = data.target_dimensions.ratio || (image.naturalWidth / image.naturalHeight);
+      var current = getCurrentAspectRatio.apply(this);
       if (current > target) {
         var new_width = getHeight.apply(this) * target;
         var diff = getWidth.apply(this) - new_width;
@@ -405,7 +408,7 @@
       'left': Math.round(left_offset),
       'width': Math.round(width),
       'height': Math.round(height)
-    }
+    };
 
     if (data.loaded && settings.animate) {
       applyAnimate.apply(this, [ properties ]);
@@ -459,10 +462,10 @@
 
   function writePosition() {
     var data = this.data('panZoom');
-    if (settings.out_x1) { settings.out_x1.val(Math.round(data.position.x1 / settings.factor)) }
-    if (settings.out_y1) { settings.out_y1.val(Math.round(data.position.y1 / settings.factor)) }
-    if (settings.out_x2) { settings.out_x2.val(Math.round(data.position.x2 / settings.factor)) }
-    if (settings.out_y2) { settings.out_y2.val(Math.round(data.position.y2 / settings.factor)) }
+    if (settings.out_x1) { settings.out_x1.val(Math.round(data.position.x1 / settings.factor)); }
+    if (settings.out_y1) { settings.out_y1.val(Math.round(data.position.y1 / settings.factor)); }
+    if (settings.out_x2) { settings.out_x2.val(Math.round(data.position.x2 / settings.factor)); }
+    if (settings.out_y2) { settings.out_y2.val(Math.round(data.position.y2 / settings.factor)); }
   }
 
   function getStepDimensions() {
@@ -476,7 +479,7 @@
         x: (settings.pan_step/100 * data.viewport_dimensions.x),
         y: (settings.pan_step/100 * data.viewport_dimensions.y)
       }
-    }
+    };
     return ret;
   }
 
